@@ -5,5 +5,12 @@
   "deploy": {
     "startCommand": "cd backend && npm start",
     "restartPolicyType": "ON_FAILURE"
+  },
+  "environments": {
+    "production": {
+      "variables": {
+        "NODE_ENV": "production"
+      }
+    }
   }
 }
