@@ -43,10 +43,42 @@ app.use('/api/admin', adminRoutes);
 
 // Basic health check endpoint
 app.get('/api/health', (req, res) => {
+  const fs = require('fs');
+  const path = require('path');
+  
+  const dataDir = path.join(__dirname, 'data');
+  const familiesPath = path.join(dataDir, 'families.csv');
+  const guestsPath = path.join(dataDir, 'guests.csv');
+  const rsvpsPath = path.join(dataDir, 'rsvps.csv');
+  
+  const fileStatus = {
+    dataDir: {
+      exists: fs.existsSync(dataDir),
+      path: dataDir
+    },
+    families: {
+      exists: fs.existsSync(familiesPath),
+      path: familiesPath,
+      size: fs.existsSync(familiesPath) ? fs.statSync(familiesPath).size : 0
+    },
+    guests: {
+      exists: fs.existsSync(guestsPath),
+      path: guestsPath,
+      size: fs.existsSync(guestsPath) ? fs.statSync(guestsPath).size : 0
+    },
+    rsvps: {
+      exists: fs.existsSync(rsvpsPath),
+      path: rsvpsPath,
+      size: fs.existsSync(rsvpsPath) ? fs.statSync(rsvpsPath).size : 0
+    }
+  };
+
   res.json({ 
     status: 'ok', 
     message: 'Roxanne\'s Baby Shower server is running',
-    storage: 'CSV files' 
+    storage: 'CSV files',
+    environment: process.env.NODE_ENV || 'development',
+    fileStatus 
   });
 });
 

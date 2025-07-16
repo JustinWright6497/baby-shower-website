@@ -5,7 +5,7 @@ nixPkgs = ['nodejs_18']
 cmds = ['cd backend && npm ci']
 
 [phases.build]
-cmds = []
+cmds = ['echo "Ensuring data files are present..." && ls -la backend/data/']
 
 [start]
 cmd = 'cd backend && npm start'

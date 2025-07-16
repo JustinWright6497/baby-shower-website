@@ -11,12 +11,28 @@ const rsvpsPath = path.join(dataDir, 'rsvps.csv');
 // Helper function to read CSV file
 function readCsvFile(filePath) {
   return new Promise((resolve, reject) => {
+    // Add debugging for production
+    console.log(`[DEBUG] Attempting to read file: ${filePath}`);
+    console.log(`[DEBUG] File exists: ${fs.existsSync(filePath)}`);
+    
+    if (!fs.existsSync(filePath)) {
+      console.error(`[ERROR] File not found: ${filePath}`);
+      resolve([]); // Return empty array instead of rejecting
+      return;
+    }
+
     const results = [];
     fs.createReadStream(filePath)
       .pipe(csv())
       .on('data', (data) => results.push(data))
-      .on('end', () => resolve(results))
-      .on('error', reject);
+      .on('end', () => {
+        console.log(`[DEBUG] Successfully read ${results.length} records from ${filePath}`);
+        resolve(results);
+      })
+      .on('error', (error) => {
+        console.error(`[ERROR] Error reading ${filePath}:`, error);
+        resolve([]); // Return empty array instead of rejecting
+      });
   });
 }
 
