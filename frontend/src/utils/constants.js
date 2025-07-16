@@ -1,22 +1,25 @@
+// API Configuration
+const API_BASE_URL = process.env.REACT_APP_API_URL || '';
+
 // API Endpoints
 export const API_ENDPOINTS = {
   AUTH: {
-    LOGIN: '/api/auth/login',
-    LOGOUT: '/api/auth/logout',
-    ME: '/api/auth/me'
+    LOGIN: `${API_BASE_URL}/api/auth/login`,
+    LOGOUT: `${API_BASE_URL}/api/auth/logout`,
+    ME: `${API_BASE_URL}/api/auth/me`
   },
   RSVP: {
-    FAMILY: '/api/rsvp/family-rsvp',
-    SUBMIT: '/api/rsvp/submit',
-    GUEST: '/api/rsvp/guest'
+    FAMILY: `${API_BASE_URL}/api/rsvp/family-rsvp`,
+    SUBMIT: `${API_BASE_URL}/api/rsvp/submit`,
+    GUEST: `${API_BASE_URL}/api/rsvp/guest`
   },
   ADMIN: {
-    FAMILIES: '/api/admin/families',
-    STATS: '/api/admin/stats',
-    ADD_FAMILY: '/api/admin/add-family',
-    REMOVE_GUEST: (guestId) => `/api/admin/guest/${guestId}`,
-    REMOVE_FAMILY: (familyId) => `/api/admin/family/${familyId}`,
-    UPDATE_GUEST: (guestId) => `/api/admin/guest/${guestId}`
+    FAMILIES: `${API_BASE_URL}/api/admin/families`,
+    STATS: `${API_BASE_URL}/api/admin/stats`,
+    ADD_FAMILY: `${API_BASE_URL}/api/admin/add-family`,
+    REMOVE_GUEST: (guestId) => `${API_BASE_URL}/api/admin/guest/${guestId}`,
+    REMOVE_FAMILY: (familyId) => `${API_BASE_URL}/api/admin/family/${familyId}`,
+    UPDATE_GUEST: (guestId) => `${API_BASE_URL}/api/admin/guest/${guestId}`
   }
 };
 
