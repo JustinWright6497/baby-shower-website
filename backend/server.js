@@ -10,7 +10,10 @@ app.use(cors({
   origin: [
     process.env.FRONTEND_URL || 'http://localhost:3000',
     'https://vercel.app',
-    'https://*.vercel.app'
+    'https://*.vercel.app',
+    'https://baby-shower-website.vercel.app',
+    'https://wrightbabyshower.baby',
+    'https://www.wrightbabyshower.baby'
   ],
   credentials: true
 }));
