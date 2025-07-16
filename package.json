@@ -1,0 +1,17 @@
+{
+  "name": "halloween-baby-shower-website",
+  "version": "1.0.0",
+  "description": "Halloween-themed baby shower website with RSVP functionality",
+  "scripts": {
+    "dev": "concurrently \"cd backend && npm run dev\" \"cd frontend && npm start\"",
+    "backend": "cd backend && npm run dev",
+    "frontend": "cd frontend && npm start",
+    "install-all": "npm install && cd frontend && npm install && cd ../backend && npm install",
+    "build": "cd frontend && npm install && npm run build",
+    "start": "cd backend && npm start",
+    "deploy-prep": "node prepare-deployment.js"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

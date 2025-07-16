@@ -1,0 +1,46 @@
+/* Base styles for Elegant Baby Shower */
+@import url('https://fonts.googleapis.com/css2?family=The+Seasons&family=Beautiful&family=Playfair+Display:wght@400;500;600;700&family=Cormorant+Garamond:wght@300;400;500;600;700&family=Crimson+Text:wght@400;600&family=Dancing+Script:wght@400;500;600;700&family=Great+Vibes&family=Allura&display=swap');
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: 'Cormorant Garamond', serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: 'Courier New', monospace;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #575757;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #B08047;
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #CE9647;
+}
+
+/* Selection styles */
+::selection {
+  background: rgba(206, 150, 71, 0.3);
+  color: #F8F9F5;
+}
+
+::-moz-selection {
+  background: rgba(206, 150, 71, 0.3);
+  color: #F8F9F5;
+} 
