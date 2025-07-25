@@ -2,7 +2,6 @@ import React from 'react';
 import Layout from '../components/Layout';
 import PageHeader from '../components/PageHeader';
 import SectionHeader from '../components/SectionHeader';
-import ContentContainer from '../components/ContentContainer';
 
 const Registries = () => {
   const registryInfo = {

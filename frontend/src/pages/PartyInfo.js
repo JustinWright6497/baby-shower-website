@@ -4,10 +4,8 @@ import Layout from '../components/Layout';
 import PageHeader from '../components/PageHeader';
 import SectionHeader from '../components/SectionHeader';
 import ContentContainer from '../components/ContentContainer';
-import useScrollToTop from '../hooks/useScrollToTop';
 
 const PartyInfo = () => {
-  useScrollToTop();
   return (
     <Layout>
       <div>
@@ -100,7 +98,7 @@ const PartyInfo = () => {
             Thank you for being part of our special day!
           </p>
           <p style={{ fontSize: '1rem', opacity: 0.8 }}>
-            Don't forget to RSVP so we can plan the perfect celebration for everyone!
+            Don't forget to <Link to="/rsvp" style={{ color: '#CE9647', textDecoration: 'underline' }}>RSVP</Link> so we can plan the perfect celebration for everyone!
           </p>
         </div>
       </div>

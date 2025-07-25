@@ -1,5 +1,5 @@
 const express = require('express');
-const csvData = require('../data/csvData');
+const data = require('../data');
 const { requireAdmin } = require('../middleware/auth');
 
 const router = express.Router();
@@ -7,9 +7,9 @@ const router = express.Router();
 // Get all family RSVPs for admin view
 router.get('/families', requireAdmin, async (req, res) => {
   try {
-    const families = await csvData.getFamilies();
-    const guests = await csvData.getGuests();
-    const rsvps = await csvData.getRsvps();
+    const families = await data.getFamilies();
+    const guests = await data.getGuests();
+    const rsvps = await data.getRsvps();
     
     // Group data by family
     const familiesMap = new Map();
@@ -56,9 +56,9 @@ router.get('/families', requireAdmin, async (req, res) => {
 // Get legacy RSVP format for backwards compatibility
 router.get('/rsvps', requireAdmin, async (req, res) => {
   try {
-    const families = await csvData.getFamilies();
-    const guests = await csvData.getGuests();
-    const rsvps = await csvData.getRsvps();
+    const families = await data.getFamilies();
+    const guests = await data.getGuests();
+    const rsvps = await data.getRsvps();
     
     const rsvpData = guests
       .filter(guest => !guest.is_admin)
@@ -93,9 +93,9 @@ router.get('/rsvps', requireAdmin, async (req, res) => {
 // Get RSVP statistics
 router.get('/stats', requireAdmin, async (req, res) => {
   try {
-    const guests = await csvData.getGuests();
-    const rsvps = await csvData.getRsvps();
-    const families = await csvData.getFamilies();
+    const guests = await data.getGuests();
+    const rsvps = await data.getRsvps();
+    const families = await data.getFamilies();
     
     const nonAdminGuests = guests.filter(g => !g.is_admin);
     const attendingRsvps = rsvps.filter(r => r.will_attend);
@@ -151,19 +151,19 @@ router.post('/add-family', requireAdmin, async (req, res) => {
 
   try {
     // Check if family already exists
-    const existingFamilies = await csvData.getFamilies();
+    const existingFamilies = await data.getFamilies();
     if (existingFamilies.find(f => f.family_name.toLowerCase() === familyName.toLowerCase())) {
       return res.status(400).json({ error: 'Family name already exists' });
     }
 
     // Add family
-    const newFamily = await csvData.addFamily(familyName);
+          const newFamily = await data.addFamily(familyName);
     
     // Add family members
     const addedMembers = [];
     for (const member of members) {
       try {
-        const newGuest = await csvData.addGuest(
+        const newGuest = await data.addGuest(
           newFamily.id,
           member.firstName,
           member.lastName,
@@ -193,7 +193,7 @@ router.delete('/guest/:guestId', requireAdmin, async (req, res) => {
   const { guestId } = req.params;
 
   try {
-    const removedGuest = await csvData.removeGuest(guestId);
+    const removedGuest = await data.removeGuest(guestId);
     res.json({
       success: true,
       message: `Removed ${removedGuest.first_name} ${removedGuest.last_name} from the guest list`,
@@ -210,7 +210,7 @@ router.delete('/family/:familyId', requireAdmin, async (req, res) => {
   const { familyId } = req.params;
 
   try {
-    const result = await csvData.removeFamily(familyId);
+    const result = await data.removeFamily(familyId);
     res.json({
       success: true,
       message: `Removed family "${result.family.family_name}" and ${result.removedMembers} members`,
@@ -238,7 +238,7 @@ router.put('/guest/:guestId', requireAdmin, async (req, res) => {
   }
 
   try {
-    const updatedGuest = await csvData.updateGuest(guestId, firstName.trim(), lastName.trim());
+    const updatedGuest = await data.updateGuest(guestId, firstName.trim(), lastName.trim());
     res.json({
       success: true,
       message: `Updated guest name to ${firstName} ${lastName}`,

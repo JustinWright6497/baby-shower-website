@@ -1,5 +1,5 @@
 const express = require('express');
-const csvData = require('../data/csvData');
+const data = require('../data');
 const { requireAuth } = require('../middleware/auth');
 
 const router = express.Router();
@@ -7,8 +7,8 @@ const router = express.Router();
 // Get family RSVP data showing all family members and their individual RSVP statuses
 router.get('/family-rsvp', requireAuth, async (req, res) => {
   try {
-    const familyGuests = await csvData.getGuestsByFamily(req.session.familyId);
-    const rsvps = await csvData.getRsvps();
+    const familyGuests = await data.getGuestsByFamily(req.session.familyId);
+    const rsvps = await data.getRsvps();
     
     const familyData = {
       familyName: req.session.familyName,
@@ -45,8 +45,8 @@ router.get('/family-rsvp', requireAuth, async (req, res) => {
 // Get individual guest's RSVP (for backwards compatibility)
 router.get('/my-rsvp', requireAuth, async (req, res) => {
   try {
-    const guests = await csvData.getGuests();
-         const rsvp = await csvData.findRsvpByGuestId(req.session.guestId);
+        const guests = await data.getGuests();
+    const rsvp = await data.findRsvpByGuestId(req.session.guestId);
 
     const guest = guests.find(g => g.id === req.session.guestId);
 
@@ -89,7 +89,7 @@ router.post('/submit', requireAuth, async (req, res) => {
     const targetGuestId = guestId || req.session.guestId;
 
     // Verify the target guest is in the same family (or is the current user)
-    const guests = await csvData.getGuests();
+    const guests = await data.getGuests();
     const targetGuest = guests.find(g => g.id === parseInt(targetGuestId));
     const currentGuest = guests.find(g => g.id === req.session.guestId);
 
@@ -99,7 +99,7 @@ router.post('/submit', requireAuth, async (req, res) => {
     }
 
     // Save the RSVP
-    await csvData.saveRsvp(
+    await data.saveRsvp(
       targetGuestId,
       willAttend,
       dietaryRestrictions || '',

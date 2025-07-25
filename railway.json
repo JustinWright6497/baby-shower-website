@@ -9,7 +9,8 @@
   "environments": {
     "production": {
       "variables": {
-        "NODE_ENV": "production"
+        "NODE_ENV": "production",
+        "SESSION_SECRET": "bda704501489ab1891464b5169b53552d450bdbb5b1e6fa19fe4050de4493c6c4865bb71585c4aa5aba46826fe071a21babf2074236edee458897bea5e573a77"
       }
     }
   }

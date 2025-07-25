@@ -1,3 +1,4 @@
 id,guest_id,will_attend,dietary_restrictions,individual_notes,created_at,updated_at
 1,2,true,Pescatarian,Host,2025-07-15 07:38:01,2025-07-15 07:38:01
 2,3,true,N/A,Host,2025-07-15 07:38:13,2025-07-15 07:38:13
+3,1,false,,She testing,2025-07-25 21:28:26,2025-07-25 21:28:26

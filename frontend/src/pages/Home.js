@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Layout from '../components/Layout';
 
 const Home = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   return (
     <Layout>
       <div>
@@ -116,7 +119,7 @@ const Home = () => {
             Thank you for helping us welcome Stevie!
           </p>
           <p style={{ fontSize: '1rem', opacity: 0.8 }}>
-            Don't forget to RSVP by Sept. 1st! The sooner people RSVP the sooner we can confirm a venue!
+            Don't forget to <Link to="/rsvp" style={{ color: '#CE9647', textDecoration: 'underline' }}>RSVP</Link> by Sept. 1st! The sooner people RSVP the sooner we can confirm a venue!
           </p>
           <div style={{ fontSize: '2rem', marginTop: '2rem' }}>
             • ◦ • ◦ • ◦ • ◦ •

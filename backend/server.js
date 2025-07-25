@@ -76,7 +76,7 @@ app.get('/api/health', (req, res) => {
   res.json({ 
     status: 'ok', 
     message: 'Roxanne\'s Baby Shower server is running',
-    storage: 'CSV files',
+    storage: process.env.NODE_ENV === 'production' && process.env.DATABASE_URL ? 'PostgreSQL' : 'CSV files',
     environment: process.env.NODE_ENV || 'development',
     fileStatus 
   });
@@ -88,11 +88,39 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Internal server error' });
 });
 
-// Start server
-app.listen(PORT, () => {
-  console.log('Roxanne\'s Baby Shower server running on port', PORT);
-  console.log('📁 Using CSV file storage');
-  console.log('🎯 Frontend should be running on http://localhost:3000');
-});
+// Initialize database and start server
+const { initializeDatabase } = require('./data');
+
+async function startServer() {
+  try {
+    // Initialize database schema
+    await initializeDatabase();
+    
+    // Optional: Run migration if RUN_MIGRATION is set
+    if (process.env.RUN_MIGRATION === 'true' && process.env.DATABASE_URL) {
+      console.log('🔄 Running automatic migration...');
+      try {
+        const { runMigration } = require('./data/migrate');
+        await runMigration();
+        console.log('✅ Migration completed successfully');
+      } catch (migrationError) {
+        console.error('⚠️ Migration failed:', migrationError.message);
+        console.log('💡 You can run migration manually with: npm run migrate:postgres');
+      }
+    }
+    
+    // Start server
+    app.listen(PORT, () => {
+      console.log('Roxanne\'s Baby Shower server running on port', PORT);
+      console.log(process.env.NODE_ENV === 'production' && process.env.DATABASE_URL ? '🐘 Using PostgreSQL database' : '📄 Using CSV files');
+      console.log('🎯 Frontend should be running on http://localhost:3000');
+    });
+  } catch (error) {
+    console.error('Failed to start server:', error);
+    process.exit(1);
+  }
+}
+
+startServer();
 
 module.exports = app; 

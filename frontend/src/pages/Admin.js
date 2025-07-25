@@ -5,7 +5,7 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import ErrorMessage from '../components/ErrorMessage';
 import SuccessMessage from '../components/SuccessMessage';
 import PageHeader from '../components/PageHeader';
-import { API_ENDPOINTS, COLORS } from '../utils/constants';
+import { API_ENDPOINTS } from '../utils/constants';
 
 const Admin = () => {
   const [loading, setLoading] = useState(true);
@@ -292,7 +292,7 @@ const Admin = () => {
             style={{
               fontSize: '1.1rem',
               padding: '0.8rem 2rem',
-              background: COLORS.SECONDARY,
+              background: '#CE9647',
               border: 'none',
               borderRadius: '8px',
               color: '#ffffff',

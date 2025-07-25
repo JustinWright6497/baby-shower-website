@@ -1,5 +1,5 @@
 const express = require('express');
-const csvData = require('../data/csvData');
+const data = require('../data');
 
 const router = express.Router();
 
@@ -12,7 +12,7 @@ router.post('/login', async (req, res) => {
   }
 
   try {
-    const guest = await csvData.findGuestByName(firstName.trim(), lastName.trim());
+    const guest = await data.findGuestByName(firstName.trim(), lastName.trim());
 
     if (!guest) {
       return res.status(401).json({ error: 'Guest not found. Please check your name spelling or contact the host.' });

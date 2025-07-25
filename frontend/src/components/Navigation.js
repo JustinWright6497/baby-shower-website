@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
 const Navigation = () => {
-  const { user, logout, isAdmin } = useAuth();
+  const { logout, isAdmin } = useAuth();
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -11,6 +11,20 @@ const Navigation = () => {
     logout();
     setIsMobileMenuOpen(false); // Close menu after logout
   };
+
+  // Navigation items with icons and descriptions
+  const navItems = [
+    { path: '/', label: 'Home', icon: '🏠', description: 'Welcome page' },
+    { path: '/party-info', label: 'Party Info', icon: '📅', description: 'Event details & schedule' },
+    { path: '/rsvp', label: 'RSVP', icon: '✉️', description: 'Respond to invitation' },
+    { path: '/registries', label: 'Registries', icon: '🎁', description: 'Gift registries' },
+    { path: '/costume-contest', label: 'Costume Contest', icon: '🎭', description: 'Costume contest info' },
+  ];
+
+  // Add admin item if user is admin
+  if (isAdmin) {
+    navItems.push({ path: '/admin', label: 'Admin', icon: '⚙️', description: 'Admin panel' });
+  }
 
   const isActive = (path) => {
     return location.pathname === path;
@@ -31,116 +45,34 @@ const Navigation = () => {
         <button 
           className="mobile-menu-toggle"
           onClick={toggleMobileMenu}
-          style={{
-            display: 'none',
-            background: 'none',
-            border: 'none',
-            color: '#F8F9F5',
-            fontSize: '1.5rem',
-            cursor: 'pointer',
-            padding: '0.5rem'
-          }}
+          aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
         >
-          {isMobileMenuOpen ? '✕' : '☰'}
+          {isMobileMenuOpen ? '✕' : (
+            <span className="menu-button-content">
+              <span className="menu-label">Menu</span>
+            </span>
+          )}
         </button>
 
         <ul 
           className={`nav-links ${isMobileMenuOpen ? 'mobile-menu-open' : ''}`}
-          style={{
-            ...(isMobileMenuOpen && {
-              display: 'flex',
-              flexDirection: 'column',
-              position: 'absolute',
-              top: '100%',
-              left: 0,
-              right: 0,
-              backgroundColor: 'rgba(0, 0, 0, 0.95)',
-              zIndex: 1000,
-              padding: '1rem 0',
-              boxShadow: '0 2px 10px rgba(0, 0, 0, 0.3)'
-            })
-          }}
         >
-          <li>
-            <Link 
-              to="/" 
-              className={isActive('/') ? 'active' : ''}
-              style={{ 
-                color: isActive('/') ? '#CE9647' : '#F8F9F5',
-                background: isActive('/') ? 'rgba(206, 150, 71, 0.2)' : 'transparent'
-              }}
-              onClick={closeMobileMenu}
-            >
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link 
-                to="/party-info"
-                className={isActive('/party-info') ? 'active' : ''}
-                style={{ 
-                  color: isActive('/party-info') ? '#CE9647' : '#F8F9F5',
-                  background: isActive('/party-info') ? 'rgba(206, 150, 71, 0.2)' : 'transparent'
+          {navItems.map((item) => (
+            <li key={item.path}>
+              <Link
+                to={item.path}
+                className={isActive(item.path) ? 'active' : ''}
+                style={{
+                  color: isActive(item.path) ? '#CE9647' : '#F8F9F5',
+                  background: isActive(item.path) ? 'rgba(206, 150, 71, 0.2)' : 'transparent'
                 }}
                 onClick={closeMobileMenu}
+                title={item.description}
               >
-                Party Info
+                {item.label}
               </Link>
             </li>
-            <li>
-              <Link 
-                to="/rsvp"
-                className={isActive('/rsvp') ? 'active' : ''}
-                style={{ 
-                  color: isActive('/rsvp') ? '#CE9647' : '#F8F9F5',
-                  background: isActive('/rsvp') ? 'rgba(206, 150, 71, 0.2)' : 'transparent'
-                }}
-                onClick={closeMobileMenu}
-              >
-                RSVP
-              </Link>
-            </li>
-            <li>
-              <Link 
-                to="/registries"
-                className={isActive('/registries') ? 'active' : ''}
-                style={{ 
-                  color: isActive('/registries') ? '#CE9647' : '#F8F9F5',
-                  background: isActive('/registries') ? 'rgba(206, 150, 71, 0.2)' : 'transparent'
-                }}
-                onClick={closeMobileMenu}
-              >
-                Registries
-              </Link>
-            </li>
-            <li>
-              <Link 
-                to="/costume-contest"
-                className={isActive('/costume-contest') ? 'active' : ''}
-                style={{ 
-                  color: isActive('/costume-contest') ? '#CE9647' : '#F8F9F5',
-                  background: isActive('/costume-contest') ? 'rgba(206, 150, 71, 0.2)' : 'transparent'
-                }}
-                onClick={closeMobileMenu}
-              >
-                Costume Contest
-              </Link>
-          </li>
-          {isAdmin && (
-            <li>
-              <Link 
-                to="/admin"
-                className={isActive('/admin') ? 'active' : ''}
-                style={{ 
-                  color: isActive('/admin') ? '#CE9647' : '#F8F9F5',
-                  background: isActive('/admin') ? 'rgba(206, 150, 71, 0.2)' : 'transparent'
-                }}
-                onClick={closeMobileMenu}
-              >
-                Admin
-              </Link>
-            </li>
-          )}
+          ))}
         </ul>
 
         <div className="nav-user">

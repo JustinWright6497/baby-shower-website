@@ -73,28 +73,7 @@ body {
   z-index: -1;
 }
 
-/* Floating Elements Animation */
-@keyframes float-element {
-  0%, 100% { transform: translateY(0px) rotate(0deg); }
-  25% { transform: translateY(-8px) rotate(1deg); }
-  50% { transform: translateY(-4px) rotate(-0.5deg); }
-  75% { transform: translateY(-12px) rotate(0.5deg); }
-}
 
-.floating-element {
-  position: fixed;
-  font-size: 20px;
-  opacity: 0.5;
-  color: #ffffff;
-  animation: float-element 8s ease-in-out infinite;
-  pointer-events: none;
-  z-index: 1;
-}
-
-.floating-element:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
-.floating-element:nth-child(2) { top: 20%; right: 15%; animation-delay: 2s; }
-.floating-element:nth-child(3) { top: 60%; left: 5%; animation-delay: 4s; }
-.floating-element:nth-child(4) { top: 80%; right: 20%; animation-delay: 6s; }
 
 /* Typography */
 h1 {
@@ -246,8 +225,65 @@ p {
 
 /* Mobile Navigation Styles */
 @media (max-width: 768px) {
+  /* Hide the navbar header on mobile since menu/logout buttons are fixed */
+  .navbar {
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
+  }
+  
+  /* Hide the navbar brand/title on mobile */
+  .nav-brand {
+    display: none !important;
+  }
+  
   .mobile-menu-toggle {
     display: block !important;
+    position: fixed !important;
+    top: 1rem !important;
+    left: 1rem !important;
+    z-index: 1000 !important;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(20, 20, 20, 0.8) 100%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 12px !important;
+    padding: 0.75rem 1rem !important;
+    color: #ffffff !important;
+    font-size: 1.3rem !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    min-width: 48px !important;
+    min-height: 48px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    backdrop-filter: blur(10px) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+  }
+
+  .menu-button-content {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .menu-icon {
+    font-size: 1.2rem;
+  }
+
+  .menu-label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  
+  .mobile-menu-toggle:hover {
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.95) 0%, rgba(40, 40, 40, 0.9) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+    border-color: rgba(255, 255, 255, 0.3) !important;
   }
   
   .nav-links {
@@ -256,23 +292,113 @@ p {
   
   .nav-links.mobile-menu-open {
     display: flex !important;
+    position: fixed !important;
+    top: 4.5rem !important; /* just below the menu button */
+    left: 1rem !important;
+    right: auto !important;
+    background: linear-gradient(135deg, rgba(0,0,0,0.98) 0%, rgba(20,20,20,0.95) 100%) !important;
+    flex-direction: column !important;
+    padding: 0.5rem 0.5rem !important;
+    z-index: 1001 !important;
+    min-width: 180px !important;
+    max-width: 90vw !important;
+    border-radius: 12px !important;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.18), 0 1.5px 4px rgba(0,0,0,0.12) !important;
+    margin: 0 !important;
+    height: auto !important;
+    min-height: unset !important;
+    /* Remove overlay/fullscreen styles */
   }
-  
   .nav-links.mobile-menu-open li {
-    width: 100%;
-    text-align: center;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    list-style: none !important;
+    position: relative;
+    margin: 0.2em 0;
   }
-  
+  .nav-links.mobile-menu-open li:before {
+    display: none !important;
+    content: none !important;
+  }
+  /* Add a small arrow/pointer to connect dropdown to menu button */
+  .nav-links.mobile-menu-open::before {
+    content: '';
+    position: fixed;
+    top: 3.5rem;
+    left: 24px;
+    width: 16px;
+    height: 16px;
+    background: linear-gradient(135deg, rgba(0,0,0,0.98) 0%, rgba(20,20,20,0.95) 100%);
+    transform: rotate(45deg);
+    z-index: 1002;
+    border-radius: 3px 0 0 0;
+    box-shadow: -2px -2px 6px rgba(0,0,0,0.10);
+  }
+  /* Remove any overlay or fullscreen background for the menu */
+  .mobile-menu-overlay {
+    display: none !important;
+  }
+  .nav-links.mobile-menu-open li a {
+    color: #fff !important;
+    text-decoration: none;
+    font-size: 1.1em;
+    width: 100%;
+    display: block;
+  }
+  .nav-links.mobile-menu-open li:hover {
+    background: rgba(206,150,71,0.12);
+  }
+  /* Remove any overlay or full-screen styles */
+  .nav-links.mobile-menu-open::after {
+    display: none !important;
+    content: none !important;
+  }
+  /* Add a small arrow/pointer at the top of the dropdown */
+  .nav-links.mobile-menu-open::before {
+    content: '';
+    position: fixed;
+    top: 3.5rem;
+    left: 24px;
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 10px solid rgba(0,0,0,0.98);
+    z-index: 1002;
+  }
   .nav-links.mobile-menu-open li:last-child {
-    border-bottom: none;
+    margin-bottom: 0;
   }
   
   .nav-links.mobile-menu-open a {
-    display: block;
-    padding: 1rem;
     width: 100%;
-    border-radius: 0;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 500;
+    text-align: left;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(206, 193, 193, 0.382);
+  }
+
+  .nav-icon {
+    display: none;
+  }
+
+  .nav-label {
+    display: none;
+  }
+  
+  .nav-links.mobile-menu-open a:hover {
+    background: rgba(206, 193, 193, 0.382) !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+  }
+  
+  .nav-links.mobile-menu-open a.active {
+    background: rgba(206, 193, 193, 0.382) !important;
+    border-color: rgba(206, 150, 71, 0.4) !important;
+    color: #CE9647 !important;
+    box-shadow: 0 4px 12px rgba(206, 150, 71, 0.2) !important;
   }
   
   .nav-container {
@@ -281,12 +407,35 @@ p {
   }
   
   .nav-user {
+    position: fixed !important;
+    top: 1rem !important;
+    right: 1rem !important;
+    z-index: 1000 !important;
     gap: 0.5rem;
   }
   
   .nav-logout {
-    padding: 0.4rem 0.8rem;
-    font-size: 0.9rem;
+    padding: 0.75rem 1.2rem !important;
+    font-size: 0.95rem !important;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(20, 20, 20, 0.8) 100%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 12px !important;
+    transition: all 0.3s ease !important;
+    backdrop-filter: blur(10px) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+    font-weight: 500 !important;
+  }
+  
+  .nav-logout:hover {
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.95) 0%, rgba(40, 40, 40, 0.9) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+    border-color: rgba(255, 255, 255, 0.3) !important;
+  }
+  
+  /* Add padding to body to account for fixed buttons */
+  body {
+    padding-top: 4rem;
   }
 }
 
@@ -388,15 +537,7 @@ p {
   transform: translateY(-2px);
 }
 
-.btn-danger {
-  background: #666666;
-  color: white;
-}
 
-.btn-danger:hover {
-  background: #555555;
-  transform: translateY(-2px);
-}
 
 /* Loading States */
 .loading-container {
@@ -626,9 +767,21 @@ li:before {
 
 /* Section Separators - Responsive Design */
 .section-separator {
-  border-top: 1px solid #333333;
+  border-top: none;
+  position: relative;
   margin-top: 4rem;
   padding-top: 3rem;
+}
+
+.section-separator::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 1px;
+  background: #333333;
 }
 
 /* More subtle separators on larger screens */
@@ -650,5 +803,74 @@ li:before {
     height: 1px;
     background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.4), transparent);
     opacity: 1;
+  }
+} 
+
+/* Enhanced radio button styles for all devices */
+input[type='radio'] {
+  width: 1.4em;
+  height: 1.4em;
+  accent-color: #CE9647;
+  margin-right: 0.5em;
+  vertical-align: middle;
+  transition: all 0.2s;
+}
+
+input[type='radio']:checked {
+  accent-color: #CE9647;
+}
+
+/* Enhanced label styling for all devices */
+label[for] {
+  font-size: 1.1em;
+  padding: 0.3em 0;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  /* Make radio buttons larger and more visually obvious on mobile */
+  input[type='radio'] {
+    width: 1.6em;
+    height: 1.6em;
+    accent-color: #CE9647;
+    border: 2px solid #CE9647;
+    background: #fff;
+    margin-right: 0.7em;
+    vertical-align: middle;
+    box-shadow: 0 0 0 2px #fff, 0 0 0 4px #CE9647;
+    transition: box-shadow 0.2s;
+  }
+  
+  input[type='radio']:checked {
+    box-shadow: 0 0 0 2px #fff, 0 0 0 6px #CE9647;
+    background: #CE9647;
+  }
+  
+  /* Make label text a bit larger for touch targets */
+  label[for] {
+    font-size: 1.2em;
+    padding: 0.5em 0;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+  
+
+  
+  /* Hide the navbar header on mobile since menu/logout buttons are fixed */
+  .navbar {
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
+  }
+  
+  /* Hide the navbar brand/title on mobile */
+  .nav-brand {
+    display: none !important;
   }
 } 

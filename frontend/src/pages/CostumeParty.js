@@ -3,18 +3,14 @@ import Layout from '../components/Layout';
 import PageHeader from '../components/PageHeader';
 import SectionHeader from '../components/SectionHeader';
 import ContentContainer from '../components/ContentContainer';
-import useScrollToTop from '../hooks/useScrollToTop';
 
 const CostumeParty = () => {
-  useScrollToTop();
-
-
   return (
     <Layout>
       <div>
         <PageHeader 
           title="Costume Contest!"
-          subtitle="Get ready for our beautiful halloween style competition!"
+          subtitle="Get ready for our costume contest!"
           description="Come dressed to impress and win some wonderful prizes!"
         />
 

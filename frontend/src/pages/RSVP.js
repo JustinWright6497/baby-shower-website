@@ -259,12 +259,7 @@ const RSVP = () => {
         </div>
 
         {/* Questions Section */}
-        <div style={{ 
-          marginTop: '4rem', 
-          textAlign: 'center',
-          borderTop: '1px solid #333333',
-          paddingTop: '3rem'
-        }}>
+        <div className="section-separator" style={{ textAlign: 'center' }}>
           <h3 style={{ color: '#000000', fontSize: '1.5rem', marginBottom: '1rem' }}>Questions?</h3>
           <p style={{ fontSize: '1.1rem', opacity: 0.9 }}>
             Contact the host if you have any questions about the celebration!
