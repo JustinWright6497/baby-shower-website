@@ -129,15 +129,20 @@ async function runMigration() {
     
   } catch (error) {
     console.error('💥 Migration failed:', error);
-    process.exit(1);
-  } finally {
-    process.exit(0);
+    if (require.main === module) {
+      process.exit(1);
+    }
+    throw error;
   }
 }
 
 // Run migration if this file is executed directly
 if (require.main === module) {
-  runMigration();
+  runMigration().then(() => {
+    process.exit(0);
+  }).catch(() => {
+    process.exit(1);
+  });
 }
 
 module.exports = { runMigration }; 
