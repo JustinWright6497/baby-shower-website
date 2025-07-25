@@ -177,10 +177,82 @@ async function findRsvpByGuestId(guestId) {
   }
 }
 
+async function findRsvpByFamilyId(familyId) {
+  try {
+    const guests = await getGuests();
+    const familyGuests = guests.filter(g => g.family_id === parseInt(familyId));
+    const familyGuestIds = familyGuests.map(g => g.id);
+    
+    const rsvps = await getRsvps();
+    const familyRsvp = rsvps.find(r => familyGuestIds.includes(r.guest_id));
+    
+    if (familyRsvp) {
+      const guest = familyGuests.find(g => g.id === familyRsvp.guest_id);
+      const families = await getFamilies();
+      const family = families.find(f => f.id === parseInt(familyId));
+      
+      return {
+        ...familyRsvp,
+        first_name: guest.first_name,
+        last_name: guest.last_name,
+        family_name: family.family_name
+      };
+    }
+    
+    return null;
+  } catch (error) {
+    console.error('Error finding RSVP by family:', error);
+    return null;
+  }
+}
+
+async function getRsvpsByFamily(familyId) {
+  try {
+    const guests = await getGuests();
+    const familyGuests = guests.filter(g => g.family_id === parseInt(familyId));
+    const familyGuestIds = familyGuests.map(g => g.id);
+    
+    const rsvps = await getRsvps();
+    const familyRsvps = rsvps.filter(r => familyGuestIds.includes(r.guest_id));
+    
+    const families = await getFamilies();
+    const family = families.find(f => f.id === parseInt(familyId));
+    
+    return familyRsvps.map(rsvp => {
+      const guest = familyGuests.find(g => g.id === rsvp.guest_id);
+      return {
+        ...rsvp,
+        first_name: guest.first_name,
+        last_name: guest.last_name,
+        family_name: family.family_name
+      };
+    });
+  } catch (error) {
+    console.error('Error getting RSVPs by family:', error);
+    return [];
+  }
+}
+
 async function saveRsvp(guestId, willAttend, dietaryRestrictions = '', individualNotes = '') {
   try {
+    // First, get the guest to find their family
+    const guests = await getGuests();
+    const guest = guests.find(g => g.id === parseInt(guestId));
+    
+    if (!guest) {
+      throw new Error('Guest not found');
+    }
+    
+    const familyId = guest.family_id;
+    
+    // Get all guests in this family
+    const familyGuests = guests.filter(g => g.family_id === familyId);
+    const familyGuestIds = familyGuests.map(g => g.id);
+    
+    // Check if any family member has already RSVP'd
     const rsvps = await getRsvps();
-    const existingIndex = rsvps.findIndex(r => r.guest_id === parseInt(guestId));
+    const existingFamilyRsvpIndex = rsvps.findIndex(r => familyGuestIds.includes(r.guest_id));
+    
     const timestamp = new Date().toISOString().slice(0, 19).replace('T', ' ');
     
     const rsvpData = {
@@ -191,20 +263,22 @@ async function saveRsvp(guestId, willAttend, dietaryRestrictions = '', individua
       updated_at: timestamp
     };
     
-    if (existingIndex >= 0) {
-      // Update existing RSVP
-      rsvps[existingIndex] = {
-        ...rsvps[existingIndex],
+    if (existingFamilyRsvpIndex >= 0) {
+      // Family has already RSVP'd - update the existing RSVP
+      rsvps[existingFamilyRsvpIndex] = {
+        ...rsvps[existingFamilyRsvpIndex],
         ...rsvpData
       };
+      console.log(`📝 Updated existing RSVP for family ${guest.first_name} ${guest.last_name}`);
     } else {
-      // Create new RSVP
+      // Family hasn't RSVP'd yet - create new RSVP
       const newId = rsvps.length > 0 ? Math.max(...rsvps.map(r => r.id || 0)) + 1 : 1;
       rsvps.push({
         id: newId,
         ...rsvpData,
         created_at: timestamp
       });
+      console.log(`✅ Created new RSVP for family ${guest.first_name} ${guest.last_name}`);
     }
     
     await writeCsvFile(rsvpsPath, rsvps, ['id', 'guest_id', 'will_attend', 'dietary_restrictions', 'individual_notes', 'created_at', 'updated_at']);
@@ -312,5 +386,7 @@ module.exports = {
   updateGuest,
   getRsvps,
   findRsvpByGuestId,
+  findRsvpByFamilyId,
+  getRsvpsByFamily,
   saveRsvp
 }; 

@@ -221,29 +221,75 @@ async function findRsvpByGuestId(guestId) {
   }
 }
 
+async function findRsvpByFamilyId(familyId) {
+  try {
+    const result = await query(`
+      SELECT r.*, g.first_name, g.last_name, f.family_name
+      FROM rsvps r
+      JOIN guests g ON r.guest_id = g.id
+      JOIN families f ON g.family_id = f.id
+      WHERE g.family_id = $1
+      ORDER BY r.created_at DESC
+      LIMIT 1
+    `, [familyId]);
+    return result.rows.length > 0 ? result.rows[0] : null;
+  } catch (error) {
+    console.error('Error finding RSVP by family:', error);
+    return null;
+  }
+}
+
+async function getRsvpsByFamily(familyId) {
+  try {
+    const result = await query(`
+      SELECT r.*, g.first_name, g.last_name, f.family_name
+      FROM rsvps r
+      JOIN guests g ON r.guest_id = g.id
+      JOIN families f ON g.family_id = f.id
+      WHERE g.family_id = $1
+      ORDER BY r.created_at DESC
+    `, [familyId]);
+    return result.rows;
+  } catch (error) {
+    console.error('Error getting RSVPs by family:', error);
+    return [];
+  }
+}
+
 async function saveRsvp(guestId, willAttend, dietaryRestrictions = '', individualNotes = '') {
   try {
-    // Check if RSVP exists
-    const existingRsvp = await findRsvpByGuestId(guestId);
+    // First, get the guest to find their family
+    const guestResult = await query('SELECT * FROM guests WHERE id = $1', [guestId]);
+    if (guestResult.rows.length === 0) {
+      throw new Error('Guest not found');
+    }
     
-    if (existingRsvp) {
-      // Update existing RSVP
+    const guest = guestResult.rows[0];
+    const familyId = guest.family_id;
+    
+    // Check if this family has already RSVP'd
+    const existingFamilyRsvp = await findRsvpByFamilyId(familyId);
+    
+    if (existingFamilyRsvp) {
+      // Family has already RSVP'd - update the existing RSVP
       const result = await query(`
         UPDATE rsvps 
         SET will_attend = $1, dietary_restrictions = $2, individual_notes = $3, updated_at = CURRENT_TIMESTAMP
-        WHERE guest_id = $4 
+        WHERE id = $4 
         RETURNING *
-      `, [willAttend, dietaryRestrictions, individualNotes, guestId]);
+      `, [willAttend, dietaryRestrictions, individualNotes, existingFamilyRsvp.id]);
       
+      console.log(`📝 Updated existing RSVP for family ${guest.first_name} ${guest.last_name} (Family: ${existingFamilyRsvp.family_name})`);
       return result.rows[0];
     } else {
-      // Create new RSVP
+      // Family hasn't RSVP'd yet - create new RSVP
       const result = await query(`
         INSERT INTO rsvps (guest_id, will_attend, dietary_restrictions, individual_notes)
         VALUES ($1, $2, $3, $4) 
         RETURNING *
       `, [guestId, willAttend, dietaryRestrictions, individualNotes]);
       
+      console.log(`✅ Created new RSVP for family ${guest.first_name} ${guest.last_name}`);
       return result.rows[0];
     }
   } catch (error) {
@@ -265,5 +311,7 @@ module.exports = {
   updateGuest,
   getRsvps,
   findRsvpByGuestId,
+  findRsvpByFamilyId,
+  getRsvpsByFamily,
   saveRsvp
 }; 
