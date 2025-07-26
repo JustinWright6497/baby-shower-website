@@ -98,8 +98,8 @@ router.post('/submit', requireAuth, async (req, res) => {
       return res.status(403).json({ error: 'You can only RSVP for members of your family' });
     }
 
-    // Save the RSVP
-    await data.saveRsvp(
+    // Save the individual RSVP
+    await data.saveIndividualRsvp(
       targetGuestId,
       willAttend,
       dietaryRestrictions || '',

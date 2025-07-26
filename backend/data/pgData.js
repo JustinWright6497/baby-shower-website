@@ -298,6 +298,47 @@ async function saveRsvp(guestId, willAttend, dietaryRestrictions = '', individua
   }
 }
 
+async function saveIndividualRsvp(guestId, willAttend, dietaryRestrictions = '', individualNotes = '') {
+  try {
+    // First, get the guest to verify they exist
+    const guestResult = await query('SELECT * FROM guests WHERE id = $1', [guestId]);
+    if (guestResult.rows.length === 0) {
+      throw new Error('Guest not found');
+    }
+    
+    const guest = guestResult.rows[0];
+    
+    // Check if this specific guest already has an RSVP
+    const existingRsvpResult = await query('SELECT * FROM rsvps WHERE guest_id = $1', [guestId]);
+    
+    if (existingRsvpResult.rows.length > 0) {
+      // Guest already has an RSVP - update it
+      const result = await query(`
+        UPDATE rsvps 
+        SET will_attend = $1, dietary_restrictions = $2, individual_notes = $3, updated_at = CURRENT_TIMESTAMP
+        WHERE guest_id = $4 
+        RETURNING *
+      `, [willAttend, dietaryRestrictions, individualNotes, guestId]);
+      
+      console.log(`📝 Updated existing RSVP for guest ${guest.first_name} ${guest.last_name}`);
+      return result.rows[0];
+    } else {
+      // Guest doesn't have an RSVP yet - create new one
+      const result = await query(`
+        INSERT INTO rsvps (guest_id, will_attend, dietary_restrictions, individual_notes)
+        VALUES ($1, $2, $3, $4) 
+        RETURNING *
+      `, [guestId, willAttend, dietaryRestrictions, individualNotes]);
+      
+      console.log(`✅ Created new RSVP for guest ${guest.first_name} ${guest.last_name}`);
+      return result.rows[0];
+    }
+  } catch (error) {
+    console.error('Error saving individual RSVP:', error);
+    throw error;
+  }
+}
+
 module.exports = {
   initializeDatabase,
   getFamilies,
@@ -313,5 +354,6 @@ module.exports = {
   findRsvpByGuestId,
   findRsvpByFamilyId,
   getRsvpsByFamily,
-  saveRsvp
+  saveRsvp,
+  saveIndividualRsvp
 }; 

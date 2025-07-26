@@ -10,8 +10,7 @@ const CostumeParty = () => {
       <div>
         <PageHeader 
           title="Costume Contest!"
-          subtitle="Get ready for our costume contest!"
-          description="Come dressed to impress and win some wonderful prizes!"
+          description="Come dressed to impress and win some fun prizes!"
         />
 
         <div style={{ 
@@ -26,12 +25,43 @@ const CostumeParty = () => {
           Winners announced immediately after!
         </div>
 
-        <SectionHeader title="Contest Categories & Prizes" color="#000000" />
+        <h2 style={{ 
+          color: '#CE9647',
+          textAlign: 'center',
+          fontSize: '3rem',
+          marginBottom: '2rem',
+          marginTop: '3rem'
+        }}>Contest Categories & Prizes</h2>
         <ContentContainer>
           <SectionHeader 
-            title="Categories & Prizes to be announced" 
-            color="#CE9647"
-            subtitle="Contact Hosts/watch out on this page for updates!"
+            title="Best Overall Single" 
+            color="#000000"
+            subtitle=""
+          />
+          <SectionHeader 
+            title="Best Overall Couple" 
+            color="#000000"
+            subtitle=""
+          />
+          <SectionHeader 
+            title="Best Baby-Themed" 
+            color="#000000"
+            subtitle=""
+          />
+          <SectionHeader 
+            title="Most Clever/Funniest" 
+            color="#000000"
+            subtitle=""
+          />
+          <SectionHeader 
+            title="Most Iconic" 
+            color="#000000"
+            subtitle=""
+          />
+          <SectionHeader 
+            title="The Parents' Favorite" 
+            color="#000000"
+            subtitle="There will be prizes for the winners of each category!"
           />
         </ContentContainer>
 
@@ -40,9 +70,9 @@ const CostumeParty = () => {
         }}>Contest Rules & Guidelines</h2>
         <ContentContainer>
           <SectionHeader 
-            title="Rules & Guidelines to be announced" 
+            title="Rules & Guidelines" 
             color="#000000"
-            subtitle="Contact Hosts/watch out on this page for updates!"
+            subtitle="Anyone coming dressed as a member of our current government or in any offensive costume will be asked to remove their costume before entering"
           />
         </ContentContainer>
 

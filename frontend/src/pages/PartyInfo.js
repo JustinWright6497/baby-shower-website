@@ -84,7 +84,7 @@ const PartyInfo = () => {
               Facebook Event
             </h3>
             <p style={{ fontSize: '1.1rem', lineHeight: '1.6' }}>
-              If you are digital, you can find our facebook event here! (if this is not a link yet, we have yet to make it please check back later!)
+              If you are digital, you can find our facebook event <a href="https://fb.me/220qwU57dYAFCkq" target="_blank" rel="noopener noreferrer" style={{ color: '#CE9647', textDecoration: 'underline' }}>here!</a>
             </p>
           </div>
         </ContentContainer>
